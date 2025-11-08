@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form with Real-Time Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 3em auto;
+      background: white;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 1em;
+    }
+
+    .invalid {
+      border-color: red;
+      background-color: #ffe6e6;
+    }
+
+    .valid {
+      border-color: green;
+      background-color: #e6ffe6;
+    }
+
+    button {
+      margin-top: 1.5em;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+      <label for="fullname">Full Name:</label>
+      <input type="text" id="fullname" name="fullname" required>
+      <span class="error" id="nameError"></span>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <span class="error" id="emailError"></span>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required minlength="8">
+      <span class="error" id="passwordError"></span>
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" pattern="\\d{10}" required>
+      <span class="error" id="phoneError"></span>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="success" id="successMessage"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('registrationForm');
+    const fullName = document.getElementById('fullname');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const phone = document.getElementById('phone');
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const phoneError = document.getElementById('phoneError');
+    const successMessage = document.getElementById('successMessage');
+
+    // Email regex
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+    // Password regex: At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/;
+    // Phone regex: exactly 10 digits
+    const phoneRegex = /^\\d{10}$/;
+
+    function validateName() {
+      if (fullName.value.trim() === "") {
+        nameError.textContent = "Full name is required.";
+        fullName.classList.add('invalid');
+        fullName.classList.remove('valid');
+        return false;
+      } else {
+        nameError.textContent = "";
+        fullName.classList.remove('invalid');
+        fullName.classList.add('valid');
+        return true;
+      }
+    }
+
+    function validateEmail() {
+      if (!emailRegex.test(email.value.trim())) {
+        emailError.textContent = "Please enter a valid email.";
+        email.classList.add('invalid');
+        email.classList.remove('valid');
+        return false;
+      } else {
+        emailError.textContent = "";
+        email.classList.remove('invalid');
+        email.classList.add('valid');
+        return true;
+      }
+    }
+
+    function validatePassword() {
+      if (!passwordRegex.test(password.value.trim())) {
+        passwordError.textContent = "Password must be 8+ chars, with uppercase, lowercase, number, and special char.";
+        password.classList.add('invalid');
+        password.classList.remove('valid');
+        return false;
+      } else {
+        passwordError.textContent = "";
+        password.classList.remove('invalid');
+        password.classList.add('valid');
+        return true;
+      }
+    }
+
+    function validatePhone() {
+      if (!phoneRegex.test(phone.value.trim())) {
+        phoneError.textContent = "Phone number must be 10 digits.";
+        phone.classList.add('invalid');
+        phone.classList.remove('valid');
+        return false;
+      } else {
+        phoneError.textContent = "";
+        phone.classList.remove('invalid');
+        phone.classList.add('valid');
+        return true;
+      }
+    }
+
+    // Real-time validation
+    fullName.addEventListener('input', validateName);
+    email.addEventListener('input', validateEmail);
+    password.addEventListener('input', validatePassword);
+    phone.addEventListener('input', validatePhone);
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const isNameValid = validateName();
+      const isEmailValid = validateEmail();
+      const isPasswordValid = validatePassword();
+      const isPhoneValid = validatePhone();
+
+      if (isNameValid && isEmailValid && isPasswordValid && isPhoneValid) {
+        successMessage.textContent = "Registration Successful!";
+        form.reset();
+        [fullName, email, password, phone].forEach(field => field.classList.remove('valid'));
+      } else {
+        successMessage.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>

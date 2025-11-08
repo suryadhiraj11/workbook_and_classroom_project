@@ -1,0 +1,42 @@
+/* General styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header, footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+}
+
+.responsive-img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+/* Tablet view */
+@media (max-width: 768px) {
+  body {
+    background-color: #f0f0f0;
+  }
+  header, footer {
+    font-size: 14px;
+    padding: 0.5rem;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 20px;
+  }
+  p {
+    font-size: 14px;
+  }
+}
